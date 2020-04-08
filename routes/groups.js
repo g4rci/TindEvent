@@ -21,7 +21,7 @@ router.post("/create", async (req, res, next) => {
     .json(newGroup);
     }
     catch(err) { console.log(err)};
-
 })
 
 module.exports = router;
+
