@@ -6,7 +6,7 @@ const groupSchema = new Schema({
     name: {type: String, required: true},
     users: [{type: Schema.Types.ObjectID, ref: 'User'}],
     pending: [{type: Schema.Types.ObjectID, ref: 'User'}],
-    eventID: {type: String, required: true},
+    eventID: {type: String},
     bio: {type: String}
 });
 

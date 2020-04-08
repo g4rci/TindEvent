@@ -10,6 +10,7 @@ const userSchema = new Schema({
   bio: {type: String},
   picture: { type: String, default: "https://banner2.cleanpng.com/20180404/djw/kisspng-computer-icons-users-group-internet-forum-user-avatar-5ac45a991206f5.9866985115228176890738.jpg"},
   events:[],
+  groups:[{type: Schema.Types.ObjectID, ref: 'Group'}]
 });
 
 userSchema.set('timestamps', true);
