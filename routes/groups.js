@@ -10,7 +10,6 @@ const User = require('../models/user');
 router.post("/create", async (req, res, next) => {
     try {
     const { name } = req.body
-    console.log(name, "AQUI ESTA LLEGANDO");
     const creator = req.session.currentUser._id
     const newGroup = await Group.create({ name, creator })
     console.log(newGroup);
@@ -21,7 +20,16 @@ router.post("/create", async (req, res, next) => {
     .json(newGroup);
     }
     catch(err) { console.log(err)};
-
 })
+
+router.post('/:id/delete', async (req, res, next) => {
+    try {
+    await Group.findByIdAndRemove(req.params.id)
+    res
+    .status(200) //  OK
+    .json();
+    }
+    catch(err) { console.log(err)};
+  });
 
 module.exports = router;
