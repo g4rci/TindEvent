@@ -22,7 +22,7 @@ router.post(
   validationLoggin(),
   async (req, res, next) => {
     const { username, password, email } = req.body;
-    console.log(req.body)
+    console.log("ES ESTE SEGURO", req.body)
 
     try {
       // chequea si el username ya existe en la BD
