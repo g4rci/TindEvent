@@ -38,8 +38,6 @@ router.post("/:id/edit", async (req, res, next) => {
   try {
     const { name } = req.body;
     const {id} = req.params;
-    console.log("de req body", req.body)
-    console.log("console id", req.params)
     await Group.findByIdAndUpdate({_id: id},
       { $set: { name } })
     res
