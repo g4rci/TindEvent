@@ -9,15 +9,26 @@ const User = require("../models/user");
 
 router.post("/create", async (req, res, next) => {
   try {
-    const { name } = req.body;
+    const { name, users, pending, eventID, bio } = req.body;
     const creator = req.session.currentUser._id;
-    const newGroup = await Group.create({ name, creator });
-    console.log(newGroup);
-
-    await User.updateOne({ _id: creator }, { $push: { groups: newGroup._id } });
+    const newGroup = await Group.create({ name, users, pending, eventID, bio, creator });
+    await User.findByIdAndUpdate( creator , { $push: { groups: newGroup._id } }, { new : true });
+    const updaterGroup = await Group.findByIdAndUpdate( newGroup._id , { $push: { users: creator } }, { new : true });
     res
       .status(200) //  OK
-      .json(newGroup);
+      .json(updaterGroup)
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.post("/:id/join", async (req, res, next) => {
+  const { id }  = req.params;
+  try {
+    const pendingUserToJoin = await Group.findByIdAndUpdate( id , { $push: { pending: req.session.currentUser._id } }, { new : true });
+    res
+      .status(200) //  OK
+      .json(pendingUserToJoin)
   } catch (err) {
     console.log(err);
   }
