@@ -34,8 +34,23 @@ router.post("/:id/join", async (req, res, next) => {
   }
 });
 
+router.post("/:id/:idUser/accept", async (req, res, next) => {
+  const { id, idUser }  = req.params;
+  try {
+    await Group.findByIdAndUpdate( id , { $push: { users: idUser }}, { new : true });
+    await Group.findByIdAndUpdate( id , { $pull: { pending: idUser}}, { new : true });
+    const acceptUserToJoin = await User.findByIdAndUpdate( idUser , { $push: { groups: id}}, { new : true });
+    res
+      .status(200) //  OK
+      .json(acceptUserToJoin)
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 router.post("/:id/delete", async (req, res, next) => {
   try {
+    await User.updateMany({groups: req.params.id}, { $pull: { groups: req.params.id}}, { new : true });
     await Group.findByIdAndRemove(req.params.id);
     res
       .status(200) //  OK
@@ -45,12 +60,11 @@ router.post("/:id/delete", async (req, res, next) => {
   }
 });
 
+
 router.post("/:id/edit", async (req, res, next) => {
   try {
     const { name } = req.body;
     const {id} = req.params;
-    console.log("de req body", req.body)
-    console.log("console id", req.params)
     await Group.findByIdAndUpdate({_id: id},
       { $set: { name } })
     res
