@@ -25,10 +25,19 @@ router.post("/create", async (req, res, next) => {
 router.post("/:id/join", async (req, res, next) => {
   const { id }  = req.params;
   try {
-    const pendingUserToJoin = await Group.findByIdAndUpdate( id , { $push: { pending: req.session.currentUser._id } }, { new : true });
+    const userToJoin = req.session.currentUser._id
+    const groupToCheck = await Group.findById(id)
+    if (groupToCheck.pending.includes(userToJoin)) {
+      res
+      .status(400) //  OK
+      .json({Mensaje: "Ya existe"})
+    } else {
+    const updateGroup = await Group.findByIdAndUpdate( id , { $push: { pending: req.session.currentUser._id } }, { new : true });
     res
       .status(200) //  OK
-      .json(pendingUserToJoin)
+      .json(updateGroup)
+  }
+  
   } catch (err) {
     console.log(err);
   }
