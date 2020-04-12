@@ -18,10 +18,10 @@ const saltRounds = 10;
       const { username, email, password, location, bio } = req.body;
       const picture = req.body.picture ? req.body.picture : req.session.currentUser.picture;
       const {id} = req.params;
-      const salt = bcrypt.genSaltSync(saltRounds);
-      const hashPass = bcrypt.hashSync(password, salt);
+      // const salt = bcrypt.genSaltSync(saltRounds);
+      // const hashPass = bcrypt.hashSync(password, salt);
       await User.findByIdAndUpdate({_id: id},
-        { $set: { username, email, password: hashPass, location, bio, picture } })
+        { $set: { username, email, /*password: hashPass,*/location, bio, picture } })
       res
         .status(200) //  OK
         .json();
@@ -41,8 +41,6 @@ const saltRounds = 10;
       console.log(err);
     }
   });
-
-
 
 
   module.exports = router;
