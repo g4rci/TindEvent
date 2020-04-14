@@ -30,9 +30,10 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: [process.env.PUBLIC_DOMAIN],
+    origin: ["http://localhost:3000", "https://tindevent-9c942.web.app"]
   })
 );
+
 // app.use((req, res, next) => {
 //   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
 //   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS, DELETE');
@@ -69,6 +70,7 @@ app.use("/auth", auth);
 app.use("/groups", groups);
 app.use("/profile", profile);
 
+
 // ERROR HANDLING
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -86,12 +88,7 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.use(
-  cors({
-    credentials: true,
-    origin: ["http://localhost:3000", "https://tindevent-9c942.web.app"]
-  })
-);
+
 
 
 
