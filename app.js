@@ -86,5 +86,13 @@ app.use((err, req, res, next) => {
   }
 });
 
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "https://tindevent-9c942.web.app"]
+  })
+);
+
+
 
 module.exports = app;
