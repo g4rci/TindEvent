@@ -30,7 +30,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://tindevent-9c942.web.app"]
+    origin: ["http://localhost:3000", process.env.PUBLIC_DOMAIN]
   })
 );
 
