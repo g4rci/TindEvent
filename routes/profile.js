@@ -10,13 +10,13 @@ const saltRounds = 10;
 
 router.put("/:id/edit", async (req, res, next) => {
   try {
-    const { username, email, password, location, bio } = req.body;
+    const { username, email, password, birthDate, location, bio } = req.body;
     const picture = req.body.picture ? req.body.picture : req.session.currentUser.picture;
     const {id} = req.params;
     // const salt = bcrypt.genSaltSync(saltRounds);
     // const hashPass = bcrypt.hashSync(password, salt);
     const newUser = await User.findByIdAndUpdate({_id: id},
-      { $set: { username, email, /*password: hashPass,*/location, bio, picture } }, { new : true })
+      { $set: { username, email, /*password: hashPass,*/birthDate, location, bio, picture } }, { new : true })
       res
       .status(200) //  OK
       .json(newUser);
