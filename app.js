@@ -46,14 +46,19 @@ app.use(
 app.use(
   session({
     store: new MongoStore({
+      autoRemove:"interval",
+      autoRemoveInterval: 10,
       mongooseConnection: mongoose.connection,
       ttl: 24 * 60 * 60, // 1 day
     }),
     secret: process.env.SECRET_SESSION,
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
+    unset: "destroy",
+    name:"userCookie",
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
+      sameSite: "none"
     },
   })
 );
@@ -87,9 +92,6 @@ app.use((err, req, res, next) => {
     res.status(statusError).json(err);
   }
 });
-
-
-
 
 
 module.exports = app;

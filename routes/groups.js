@@ -1,16 +1,18 @@
 var express = require("express");
 var router = express.Router();
-const isLoggedIn = require("../helpers/middlewares").isLoggedIn;
 const Group = require("../models/group");
 const User = require("../models/user");
+const { isLoggedIn } = require("../helpers/middlewares");
 //const uploadCloud = require('../config/cloudinary')
 
-//router.use((req, res, next) => isLoggedIn(req, res, next));
 
-router.post("/create", async (req, res, next) => {
+router.post("/create", isLoggedIn(), async (req, res, next) => {
+  console.log("create");
+  console.log(req.session.currentUser);
+  const { name, users, pending, eventID, bio } = req.body;
+  const creator = req.session.currentUser._id;
   try {
-    const { name, users, pending, eventID, bio } = req.body;
-    const creator = req.session.currentUser._id;
+    console.log(req.body);
     const newGroup = await Group.create({ name, users, pending, eventID, bio, creator });
     await User.findByIdAndUpdate( creator , { $push: { groups: newGroup._id } }, { new : true });
     const updaterGroup = await Group.findByIdAndUpdate( newGroup._id , { $push: { users: creator } }, { new : true });
@@ -22,7 +24,7 @@ router.post("/create", async (req, res, next) => {
   }
 });
 
-router.post("/:id/join", async (req, res, next) => {
+router.post("/:id/join", isLoggedIn(), async (req, res, next) => {
   const { id }  = req.params;
   try {
     const userToJoin = req.session.currentUser._id
@@ -43,7 +45,7 @@ router.post("/:id/join", async (req, res, next) => {
   }
 });
 
-router.post("/:id/:idUser/accept", async (req, res, next) => {
+router.post("/:id/:idUser/accept", isLoggedIn(), async (req, res, next) => {
   const { id, idUser }  = req.params;
   try {
     await Group.findByIdAndUpdate( id , { $push: { users: idUser }}, { new : true });
@@ -57,7 +59,7 @@ router.post("/:id/:idUser/accept", async (req, res, next) => {
   }
 });
 
-router.post("/:id/delete", async (req, res, next) => {
+router.post("/:id/delete", isLoggedIn(), async (req, res, next) => {
   try {
     await User.updateMany({groups: req.params.id}, { $pull: { groups: req.params.id}}, { new : true });
     await Group.findByIdAndRemove(req.params.id);
@@ -70,7 +72,7 @@ router.post("/:id/delete", async (req, res, next) => {
 });
 
 
-router.post("/:id/edit", async (req, res, next) => {
+router.post("/:id/edit", isLoggedIn(), async (req, res, next) => {
   try {
     const { name } = req.body;
     const {id} = req.params;
