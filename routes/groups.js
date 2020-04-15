@@ -5,6 +5,18 @@ const User = require("../models/user");
 const { isLoggedIn } = require("../helpers/middlewares");
 //const uploadCloud = require('../config/cloudinary')
 
+router.get("/find", (req, res, next) => {
+    Group.find()
+    .then(grupos => {
+      console.log(grupos)
+      res
+      .status(200) //  OK
+      .json(grupos)
+    })
+   .catch (err => { 
+    console.log(err);
+  })
+});
 
 router.post("/create", isLoggedIn(), async (req, res, next) => {
   console.log("create");
@@ -45,7 +57,7 @@ router.post("/:id/join", isLoggedIn(), async (req, res, next) => {
   }
 });
 
-router.post("/:id/:idUser/accept", isLoggedIn(), async (req, res, next) => {
+router.post("/:id/:idUser/accept", async (req, res, next) => {
   const { id, idUser }  = req.params;
   try {
     await Group.findByIdAndUpdate( id , { $push: { users: idUser }}, { new : true });
@@ -54,6 +66,19 @@ router.post("/:id/:idUser/accept", isLoggedIn(), async (req, res, next) => {
     res
       .status(200) //  OK
       .json(acceptUserToJoin)
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.post("/:id/:idUser/delete", async (req, res, next) => {
+  const { id, idUser }  = req.params;
+  try {
+    await User.findByIdAndUpdate(idUser, { $pull: { groups: id}}, { new : true });
+    await Group.findByIdAndUpdate( id , { $pull: { pending: idUser}}, { new : true });
+    res
+      .status(200) //  OK
+      .json()
   } catch (err) {
     console.log(err);
   }
@@ -85,6 +110,24 @@ router.post("/:id/edit", isLoggedIn(), async (req, res, next) => {
     console.log(err);
   }
 });
+
+router.get("/:id", async(req, res, next) => {
+  const {id} = req.params;
+  const group = await Group.findById({_id:id})
+  .populate("users")
+  .populate("creator")
+  .populate("pending")
+    res.json(group);
+    
+});
+
+router.get("/grouplist/:IDevent", async(req, res, next) => {
+  const {IDevent} = req.params;
+  const group = await Group.find({ "eventID": IDevent })
+    res.json(group);
+});
+
+
 
 // router.post('/:id/edit', async(req, res, next) => {
 //   try {
