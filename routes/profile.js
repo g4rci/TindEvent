@@ -41,7 +41,7 @@ router.put("/:id/edit", async (req, res, next) => {
   
     const {id} = req.params;
     const usuario = await User.findById({_id:id})
-    console.log("profile back", usuario)
+    .populate("groups")
       // si está logueado, previene que el password sea enviado y devuelve un json con los datos del usuario (disponibles en req.session.currentUser)
       // req.session.currentUser.password = "*";
       
