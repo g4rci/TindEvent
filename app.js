@@ -30,9 +30,10 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: [process.env.PUBLIC_DOMAIN],
+    origin: ["http://localhost:3000", process.env.PUBLIC_DOMAIN]
   })
 );
+
 // app.use((req, res, next) => {
 //   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
 //   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS, DELETE');
@@ -45,14 +46,19 @@ app.use(
 app.use(
   session({
     store: new MongoStore({
+      autoRemove:"interval",
+      autoRemoveInterval: 10,
       mongooseConnection: mongoose.connection,
       ttl: 24 * 60 * 60, // 1 day
     }),
     secret: process.env.SECRET_SESSION,
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
+    unset: "destroy",
+    name:"userCookie",
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
+      sameSite: "none"
     },
   })
 );
@@ -68,6 +74,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/auth", auth);
 app.use("/groups", groups);
 app.use("/profile", profile);
+
 
 // ERROR HANDLING
 // catch 404 and forward to error handler
@@ -85,5 +92,6 @@ app.use((err, req, res, next) => {
     res.status(statusError).json(err);
   }
 });
+
 
 module.exports = app;
