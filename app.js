@@ -30,7 +30,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", process.env.PUBLIC_DOMAIN]
+    origin: ["http://localhost:3000", process.env.PUBLIC_DOMAIN, "https://tind-event.firebaseapp.com"]
   })
 );
 
