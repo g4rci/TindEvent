@@ -26,7 +26,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://tindevent-mpm.web.app"]
+    origin: ["https://tindevent-mpm.web.app"]
   })
 );
 app.use((req, res, next) => {
