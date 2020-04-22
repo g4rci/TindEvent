@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const express = require("express");
 const path = require("path");
 const logger = require("morgan");
@@ -12,7 +11,6 @@ const cors = require("cors");
 const groups = require("./routes/groups");
 const profile = require("./routes/profile");
 const auth = require("./routes/auth");
-
 // MONGOOSE CONNECTION
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -22,18 +20,15 @@ mongoose
   })
   .then(() => console.log(`Connected to database`))
   .catch((err) => console.error(err));
-
 // EXPRESS SERVER INSTANCE
 const app = express();
-
 // CORS MIDDLEWARE SETUP
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", process.env.PUBLIC_DOMAIN]
+    origin: ["http://localhost:3000", "https://tindevent-mpm.web.app"]
   })
 );
-
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'https://tindevent-mpm.web.app');
   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS, DELETE');
@@ -41,7 +36,6 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
-
 // SESSION MIDDLEWARE
 app.use(
   session({
@@ -62,36 +56,29 @@ app.use(
     },
   })
 );
-
 // MIDDLEWARE
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
 // ROUTER MIDDLEWARE
 app.use("/auth", auth);
 app.use("/groups", groups);
 app.use("/profile", profile);
-
-
 // ERROR HANDLING
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   res.status(404).json({ code: "not found" });
 });
-
 app.use((err, req, res, next) => {
   // always log the error
   console.error("ERROR", req.method, req.path, err);
-
   // only render if the error ocurred before sending the response
   if (!res.headersSent) {
     const statusError = err.status || "500";
     res.status(statusError).json(err);
   }
 });
-
-
 module.exports = app;
+
