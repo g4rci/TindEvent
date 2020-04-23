@@ -11,6 +11,8 @@ const cors = require("cors");
 const groups = require("./routes/groups");
 const profile = require("./routes/profile");
 const auth = require("./routes/auth");
+const fileUpload = require("./routes/fileUpload");
+
 // MONGOOSE CONNECTION
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -66,6 +68,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/auth", auth);
 app.use("/groups", groups);
 app.use("/profile", profile);
+app.use("/upload", fileUpload);
+// app.use('/api', require('.("./routes/fileUpload")'))
+
+
 // ERROR HANDLING
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

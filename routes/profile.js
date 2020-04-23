@@ -18,7 +18,7 @@ router.put("/:id/edit", async (req, res, next) => {
     const newUser = await User.findByIdAndUpdate({_id: id},
       { $set: { username, email, /*password: hashPass,*/location, bio, picture, birthDate } }, { new : true })
       res
-      .status(200) //  OK
+      .status(200) //  OK     
       .json(newUser);
     } catch (err) {
       console.log(err);
