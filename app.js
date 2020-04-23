@@ -32,7 +32,7 @@ app.use(
   })
 );
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', ("http://localhost:4000", process.env.REACT_APP_API_URI));
+  res.setHeader('Access-Control-Allow-Origin', "http://localhost:3000" || process.env.PUBLIC_DOMAIN);
   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -69,7 +69,6 @@ app.use("/auth", auth);
 app.use("/groups", groups);
 app.use("/profile", profile);
 app.use("/upload", fileUpload);
-// app.use('/api', require('.("./routes/fileUpload")'))
 
 
 // ERROR HANDLING
