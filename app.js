@@ -11,6 +11,8 @@ const cors = require("cors");
 const groups = require("./routes/groups");
 const profile = require("./routes/profile");
 const auth = require("./routes/auth");
+const fileUpload = require("./routes/fileUpload");
+
 // MONGOOSE CONNECTION
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -30,7 +32,7 @@ app.use(
   })
 );
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', (process.env.PUBLIC_DOMAIN, "http://localhost:3000"));
+  res.setHeader('Access-Control-Allow-Origin', process.env.PUBLIC_DOMAIN);
   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -66,6 +68,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/auth", auth);
 app.use("/groups", groups);
 app.use("/profile", profile);
+app.use("/upload", fileUpload);
+
+
 // ERROR HANDLING
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
